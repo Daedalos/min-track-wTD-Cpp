@@ -12,7 +12,7 @@ using namespace std;
 #define DT 0.025     // time step size
 // These were previously defined in func.cpp. Moved here to keep
 // constant in one place --URI 
-//test blah blah
+
 #define NX 11   	     // dim of state variable + number of parameters 
 #define ND 10         // dim of state variable
 
@@ -23,7 +23,7 @@ using namespace std;
 #define NPATH 50    // number of paths
 
 #define NBETA 35     // maximal beta
-const int BETASTART = 24 // possible ot start at Beta!=0 --URI
+const int BETASTART = 24; // possible ot start at Beta!=0 --URI
 //using namespace alglib;
 
 real_2d_array Ydata;
