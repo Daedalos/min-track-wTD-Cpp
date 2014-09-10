@@ -29,8 +29,8 @@ const int BETASTART = 0; // possible ot start at Beta!=0 --URI
 real_2d_array Ydata;
 const bool generate_paths = false;
 
-const int NTD = 0;
-const int taus[NTD] = {};
+const int NTD = 1;
+const int taus[NTD] = {4};
 
 int measIdx[NMEA];
 
@@ -330,6 +330,7 @@ int main(int argc, char **argv)
 
 	// Make Initial paths - Load Later. URI
 	if(generate_paths == true){
+	  
 	  ofstream initpaths("initpaths.txt");
 	  for(ipath=0;ipath<NPATH;ipath++){
 	    for(i=0;i<NX*NT;i++) 
