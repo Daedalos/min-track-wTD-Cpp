@@ -18,11 +18,14 @@ using namespace std;
 #define NT 160       // number of time steps
 #define NMEA 1       // number of measurements
 #define NPATH 50    // number of paths
-#define NBETA 25     // maximal beta
+
+#define NBETA 35     // maximal beta
+const int BETASTART = 24 // possible ot start at Beta!=0 --URI
 //using namespace alglib;
 
 real_2d_array Ydata;
-const bool generate_paths = true;
+const bool generate_paths = false;
+
 const int NTD = 0;
 const int taus[NTD] = {};
 
@@ -315,7 +318,7 @@ int main(int argc, char **argv)
 	FILE *fp_output;
 	char filename[50];
 
-   	ae_int_t maxits = 0;
+   	ae_int_t maxits = 10000;
 
 	readdata(Ydata);
 	
@@ -348,7 +351,10 @@ int main(int argc, char **argv)
 	        
 		sprintf(filename,"path/D%d_M%d_PATH%d_Ntd%d.dat", NX,NMEA,ipath,NTD);
 		fp_output = fopen(filename,"w"); 
-		for(beta=0;beta<NBETA;beta++){
+		//Make BETASTART variable to continue old thing
+		
+		for(beta=BETASTART;beta<NBETA;beta++){
+
 		        printf("ipath=%d beta=%d\n", ipath, beta);
 			
 			//load in initial paths --URI

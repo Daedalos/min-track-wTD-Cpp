@@ -1,9 +1,7 @@
 // EDITED BY URI TO INCLUDE DISCRETE MAP/JACOBIAN
 // discF, discDF
+// Also moved DX DF out of this part of code
 
-
-#define NX 6   	     // dim of state variable + number of parameters
-#define ND 5         // dim of state variable
 using namespace alglib;
 
 void func_origin(real_1d_array &x, real_1d_array &func);
