@@ -6,6 +6,7 @@
 #include <math.h>
 #include "optimization.h"
 #include <iostream>
+#include <string>
 #include <fstream>
 using namespace std;
 
@@ -28,8 +29,8 @@ const int BETASTART = 0; // possible ot start at Beta!=0 --URI
 real_2d_array Ydata;
 const bool generate_paths = false;
 
-const int NTD = 1;
-const int taus[NTD] = {4};
+const int NTD = 0;
+const int taus[NTD] = {};
 
 int measIdx[NMEA];
 
@@ -348,24 +349,23 @@ int main(int argc, char **argv)
 
 
 	//load init paths file --Needed for all loop iterations
-	if(BETASTART==0){
-	  ifstream loadpaths("initpaths.txt");
-	}
-	else{
-	  char pathfile[50];
-	  sprintf(lastpath,"path/D%d_M%d_PATH%d_Ntd%d.dat", NX,NMEA,ipath,NTD);
-	  ifstream lastpath(pathfile);
-	}
+	// either loadpaths or lastpath will be used depending on BETASTART	
+
+	//loadpaths must be declared before ipath loop, because all
+	//paths are contained in the loadpaths file, so it has to
+	//persist through each iteration.
+	ifstream loadpaths("initpaths.txt");
+
+
 
 	for(ipath=0;ipath<NPATH;ipath++){
 	        
 		sprintf(filename,"path/D%d_M%d_PATH%d_Ntd%d.dat", NX,NMEA,ipath,NTD);
-		
-		if(OVERWRITE==true)
 
-		else{
-
-		  
+		//lastpath is the filename used to continue from a
+		//non-zero BETASTART. It must occur within ipath loop,
+		//because each path is contained in different file
+		ifstream lastpath(filename);
 
 		//Make BETASTART variable to continue old thing
 		//load in initial paths --URI
@@ -381,15 +381,19 @@ int main(int argc, char **argv)
 		}
 		else{
 		  fp_output = fopen(filename,"a");
-		  if(pathfile.is_open()){			     
+		  if(lastpath.is_open()){			     
 		    int junkBeta, junkTerm;
 		    double junkAct;
 
 		    // Throwaway first 3 entries in line
-		    pathfile >> junkBeta >> junkTerm >> junkAct;
+		    string line;
+		    for(i=0; i<BETASTART-1;i++)
+		      getline(lastpath, line);
+
+		    lastpath >> junkBeta >> junkTerm >> junkAct;
 		    
 		    for(i=0;i<NX*NT;i++)
-		      pathfile >> X0[i];			  
+		      lastpath >> X0[i];			  
 		  }
 		  else{
 		    printf("EXISTING PATHFILE NOT FOUND!");
@@ -419,7 +423,10 @@ int main(int argc, char **argv)
 			fprintf(fp_output,"\n");
 		}
 		fclose(fp_output);
+		if(lastpath.is_open())
+		  lastpath.close();
 	}
-
+	if(loadpaths.is_open())
+	  loadpaths.close();
 	return 0;
 }
