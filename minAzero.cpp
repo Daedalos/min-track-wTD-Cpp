@@ -10,7 +10,9 @@
 using namespace std;
 
 #define DT 0.025     // time step size
-#define NX 11   	     // dim of state variable + number of parameters
+// These were previously defined in func.cpp. Moved here to keep
+// constant in one place --URI
+#define NX 11   	     // dim of state variable + number of parameters 
 #define ND 10         // dim of state variable
 
 #include "func.cpp"  // func.cpp uses DT, so include after defining
