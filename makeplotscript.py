@@ -8,7 +8,7 @@ ntd = 1
 D = 6
 M = 1
 PATH=50
-B=25
+B=36
 minima = np.zeros((PATH*B,2))
 bad =0
 for p in range(PATH):

@@ -10,7 +10,7 @@
 #include <fstream>
 using namespace std;
 
-#define DT 0.025     // time step size
+#define DT 0.01     // time step size
 
 // These were previously defined in func.cpp. Moved here to keep
 // constant in one place --URI 
@@ -18,16 +18,16 @@ using namespace std;
 #define ND 5         // dim of state variable
 #include "func.cpp"  // func.cpp uses DT, so include after defining
 
-#define NT 160       // number of time steps
+#define NT 300       // number of time steps
 #define NMEA 1       // number of measurements
 #define NPATH 50    // number of paths
 
-#define NBETA 35     // maximal beta
-const int BETASTART = 24; // possible ot start at Beta!=0 --URI
+#define NBETA 30     // maximal beta
+const int BETASTART = 0; // possible ot start at Beta!=0 --URI
 //using namespace alglib;
 
 real_2d_array Ydata;
-const bool generate_paths = false;
+const bool generate_paths = true;
 
 const int NTD = 0;
 const int taus[NTD] = {};
