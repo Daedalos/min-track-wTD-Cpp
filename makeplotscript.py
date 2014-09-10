@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 ntd = 0
 D = 11
 M = 1
-PATH=50
+PATH=19
 B=25
 minima = np.zeros((PATH*B,2))
 for p in range(PATH):

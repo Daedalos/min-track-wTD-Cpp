@@ -10,20 +10,19 @@
 using namespace std;
 
 #define DT 0.025     // time step size
+
 // These were previously defined in func.cpp. Moved here to keep
 // constant in one place --URI 
-
-#define NX 11   	     // dim of state variable + number of parameters 
-#define ND 10         // dim of state variable
-
+#define NX 6   	     // dim of state variable + number of parameters 
+#define ND 5         // dim of state variable
 #include "func.cpp"  // func.cpp uses DT, so include after defining
 
 #define NT 160       // number of time steps
 #define NMEA 1       // number of measurements
 #define NPATH 50    // number of paths
 
-#define NBETA 35     // maximal beta
-const int BETASTART = 24; // possible ot start at Beta!=0 --URI
+#define NBETA 25     // maximal beta
+const int BETASTART = 0; // possible ot start at Beta!=0 --URI
 //using namespace alglib;
 
 real_2d_array Ydata;
@@ -349,26 +348,59 @@ int main(int argc, char **argv)
 
 
 	//load init paths file --Needed for all loop iterations
-	ifstream loadpaths("initpaths.txt");
+	if(BETASTART==0){
+	  ifstream loadpaths("initpaths.txt");
+	}
+	else{
+	  char pathfile[50];
+	  sprintf(lastpath,"path/D%d_M%d_PATH%d_Ntd%d.dat", NX,NMEA,ipath,NTD);
+	  ifstream lastpath(pathfile);
+	}
+
 	for(ipath=0;ipath<NPATH;ipath++){
 	        
 		sprintf(filename,"path/D%d_M%d_PATH%d_Ntd%d.dat", NX,NMEA,ipath,NTD);
-		fp_output = fopen(filename,"w"); 
-		//Make BETASTART variable to continue old thing
 		
+		if(OVERWRITE==true)
+
+		else{
+
+		  
+
+		//Make BETASTART variable to continue old thing
+		//load in initial paths --URI
+		if(BETASTART ==0){
+		  fp_output = fopen(filename,"w"); 		
+		  if(loadpaths.is_open()){
+		    for(i=0;i<NX*NT;i++)
+		      loadpaths >> X0[i];			  
+		  }
+		  else{
+		    printf("ERROR INIT PATHS NOT FOUND!");
+		  }
+		}
+		else{
+		  fp_output = fopen(filename,"a");
+		  if(pathfile.is_open()){			     
+		    int junkBeta, junkTerm;
+		    double junkAct;
+
+		    // Throwaway first 3 entries in line
+		    pathfile >> junkBeta >> junkTerm >> junkAct;
+		    
+		    for(i=0;i<NX*NT;i++)
+		      pathfile >> X0[i];			  
+		  }
+		  else{
+		    printf("EXISTING PATHFILE NOT FOUND!");
+		  }
+		}
+		
+			  
 		for(beta=BETASTART;beta<NBETA;beta++){
 
-		        printf("ipath=%d beta=%d\n", ipath, beta);
+		        printf("ipath=%d beta=%d\n", ipath, beta); 
 			
-			//load in initial paths --URI
-			if(loadpaths.is_open()){
-			  for(i=0;i<NX*NT;i++)
-			    loadpaths >> X0[i];			  
-			}
-			else{
-			  printf("ERROR INIT PATHS NOT FOUND!");
-			}
-
 			// set beta - URI
 			ptr = &beta;
 
@@ -378,7 +410,7 @@ int main(int argc, char **argv)
 
 			minlbfgsoptimize(state, TDaction_grad, NULL, ptr);
 			minlbfgsresults(state, X0, rep);
-			action_grad(X0, act, grad_a, ptr);
+			TDaction_grad(X0, act, grad_a, ptr);
 			//printf("run here\n");
 			fprintf(fp_output, "%d %d %e ", beta, int(rep.terminationtype), act);
 			printf("Min A0 = %e \n", act);
