@@ -22,15 +22,15 @@ using namespace std;
 #define NMEA 1       // number of measurements
 #define NPATH 50    // number of paths
 
-#define NBETA 25     // maximal beta
-const int BETASTART = 0; // possible ot start at Beta!=0 --URI
+#define NBETA 35     // maximal beta
+const int BETASTART = 24; // possible ot start at Beta!=0 --URI
 //using namespace alglib;
 
 real_2d_array Ydata;
 const bool generate_paths = false;
 
-const int NTD = 1;
-const int taus[NTD] = {4};
+const int NTD = 0;
+const int taus[NTD] = {};
 
 int measIdx[NMEA];
 
