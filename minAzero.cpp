@@ -29,8 +29,8 @@ const int BETASTART = 24; // possible ot start at Beta!=0 --URI
 real_2d_array Ydata;
 const bool generate_paths = false;
 
-const int NTD = 0;
-const int taus[NTD] = {};
+const int NTD = 1;
+const int taus[NTD] = {4};
 
 int measIdx[NMEA];
 
