@@ -4,11 +4,11 @@ import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
 
-ntd = 1
+ntd = 0
 D = 6
 M = 1
 PATH=50
-B=36
+B=30
 minima = np.zeros((PATH*B,2))
 bad =0
 for p in range(PATH):

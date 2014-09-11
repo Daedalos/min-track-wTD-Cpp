@@ -229,64 +229,68 @@ void TDaction_grad(const real_1d_array &x, double &action, real_1d_array &grad, 
 	}
 	
 	// Time-Delay stuff starts here --URI
-	double Rtd = 1.0/(1.0/Rm+1.0/Rf);
-	real_1d_array delayedMap[NTD];
-	real_2d_array chain, dftmp;
-	real_2d_array delayedDF[NTD];
-	real_1d_array maptmp0, maptmp1;
 
-	for(i=0; i<NTD; i++){
-	  delayedMap[i].setlength(NX);
-	  delayedDF[i].setlength(NX,NX);
-	}
+	//Safest to skip entirely, if NTD==0 i think
+	if(NTD!=0){
+	  double Rtd = 1.0/(1.0/Rm+1.0/Rf);
+	  real_1d_array delayedMap[NTD];
+	  real_2d_array chain, dftmp;
+	  real_2d_array delayedDF[NTD];
+	  real_1d_array maptmp0, maptmp1;
 
-	chain.setlength(NX,NX);
-	dftmp.setlength(NX,NX);
-	maptmp0.setlength(NX);
-	maptmp1.setlength(NX);
-
-	for(i=0; i<NT-taus[NTD-1]; i++){
-
-	  discF(x1,maptmp0);
-	  discDF(x1, chain);
-
-	  int count = 0;
-	  int tau;
-	  for(tau=1; tau<taus[NTD-1]; tau++){
-
-	    discF(maptmp0, maptmp1);
-
-	    //Want grad dA/dx(n) = (f^T(x)-y(n+T))*(DF(f^(T-1))*DF(F^(t-2))*...DF(x)
-	    discDF(maptmp1, dftmp);
-	    simple_mmult(dftmp,chain,chain);
-
-	    if(count >= NTD)
-	      throw "COUNT too big, TAUS out of bounds";
-	    if(tau==taus[count]){
-	      delayedDF[count] = chain;
-	      delayedMap[count] = maptmp1;
-	      count++;
-	    }
-	    maptmp0 = maptmp1;
-
-	  } 
-	  
-	  for(count=0; count<NTD; count++){
-	    real_2d_array dfchain = delayedDF[count];
-
-	    for(j=0; j<NMEA; j++){	      	      
-	      int idx = measIdx[j];
-	      // f^tau(x(n)) - y(n+tau) ; Measured indices only
-	      double dyTD =  delayedMap[count][idx] - Ydata[i+taus[count]][idx];
-	      action += Rtd*dyTD*dyTD;
-
-	      for(k=0; k<NX; k++){	   
-		grad[NX*i+k] += dyTD*dfchain[idx][k];
-	      }
-	    }
+	  for(i=0; i<NTD; i++){
+	    delayedMap[i].setlength(NX);
+	    delayedDF[i].setlength(NX,NX);
 	  }
 
+	  chain.setlength(NX,NX);
+	  dftmp.setlength(NX,NX);
+	  maptmp0.setlength(NX);
+	  maptmp1.setlength(NX);
+
+	  for(i=0; i<NT-taus[NTD-1]; i++){
+
+	    discF(x1,maptmp0);
+	    discDF(x1, chain);
+
+	    int count = 0;
+	    int tau;
+	    for(tau=1; tau<taus[NTD-1]; tau++){
+
+	      discF(maptmp0, maptmp1);
+
+	      //Want grad dA/dx(n) = (f^T(x)-y(n+T))*(DF(f^(T-1))*DF(F^(t-2))*...DF(x)
+	      discDF(maptmp1, dftmp);
+	      simple_mmult(dftmp,chain,chain);
+
+	      if(count >= NTD)
+		throw "COUNT too big, TAUS out of bounds";
+	      if(tau==taus[count]){
+		delayedDF[count] = chain;
+		delayedMap[count] = maptmp1;
+		count++;
+	      }
+	      maptmp0 = maptmp1;
+
+	    } 
+	  
+	    for(count=0; count<NTD; count++){
+	      real_2d_array dfchain = delayedDF[count];
+
+	      for(j=0; j<NMEA; j++){	      	      
+		int idx = measIdx[j];
+		// f^tau(x(n)) - y(n+tau) ; Measured indices only
+		double dyTD =  delayedMap[count][idx] - Ydata[i+taus[count]][idx];
+		action += Rtd*dyTD*dyTD;
+		//CHECK!
+		for(k=0; k<NX; k++){	   
+		  grad[NX*i+k] += 2*Rtd*dyTD*dfchain[idx][k];
+		}
+	      }
+	    }
+
    	  
+	  }
 	}
 
 	
