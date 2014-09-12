@@ -4,8 +4,8 @@ import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
 
-ntd = 0
-D = 6
+ntd = 1
+D = 5
 M = 1
 PATH=50
 B=30

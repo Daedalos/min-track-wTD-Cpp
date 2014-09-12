@@ -10,15 +10,15 @@
 #include <fstream>
 using namespace std;
 
-#define DT 0.01     // time step size
+#define DT 0.025     // time step size
 
 // These were previously defined in func.cpp. Moved here to keep
 // constant in one place --URI 
-#define NX 6   	     // dim of state variable + number of parameters 
+#define NX 5   	     // dim of state variable + number of parameters 
 #define ND 5         // dim of state variable
-#include "func.cpp"  // func.cpp uses DT, so include after defining
+#include "func_noparam.cpp"  // func.cpp uses DT, so include after defining
 
-#define NT 300       // number of time steps
+#define NT 200       // number of time steps
 #define NMEA 1       // number of measurements
 #define NPATH 50    // number of paths
 
@@ -27,16 +27,16 @@ const int BETASTART = 0; // possible ot start at Beta!=0 --URI
 //using namespace alglib;
 
 real_2d_array Ydata;
-const bool generate_paths = true;
+const bool generate_paths = false;
 
-const int NTD = 0;
-const int taus[NTD] = {};
+const int NTD = 1;
+const int taus[NTD] = {4};
 
 int measIdx[NMEA];
 
 void readdata(real_2d_array &data){
 	FILE *fp;
-	fp = fopen("./twin_data.dat","r");
+	fp = fopen("./dataN_dt025_noP.txt","r");
 	int i,j;
 	for(i=0;i<NT;i++)
 		for(j=0;j<NX;j++)
