@@ -249,9 +249,11 @@ void TDaction_grad(const real_1d_array &x, double &action, real_1d_array &grad, 
 	  maptmp1.setlength(NX);
 
 	  for(i=0; i<NT-taus[NTD-1]; i++){
+	    real_1d_array xcurrent;
+	    slice(XX, 1, xcurrent);
 
-	    discF(x1,maptmp0);
-	    discDF(x1, chain);
+	    discF(xcurrent,maptmp0);
+	    discDF(xcurrent, chain);
 
 	    int count = 0;
 	    int tau;
@@ -296,9 +298,6 @@ void TDaction_grad(const real_1d_array &x, double &action, real_1d_array &grad, 
 		for(k=0; k<NX; k++){	   
 		  // grad_td[i][k] += 2*Rtd*dyTD*dfchain[idx][k]
 		  // grad[NX*i+k] = grad_td[i][k]
-
-
-
 
 		  grad[NX*i+k] += 2*Rtd*dyTD*dfchain[idx][k];
 		}
