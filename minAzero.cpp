@@ -19,7 +19,7 @@ using namespace std;
 #include "func_noparam.cpp"  // func.cpp uses DT, so include after defining
 
 #define NT 200       // number of time steps
-#define NMEA 1       // number of measurements
+#define NMEA 2       // number of measurements
 #define NPATH 50    // number of paths
 
 #define NBETA 30     // maximal beta
@@ -233,6 +233,9 @@ void TDaction_grad(const real_1d_array &x, double &action, real_1d_array &grad, 
 	//Safest to skip entirely, if NTD==0 i think
 	if(NTD!=0){
 	  double Rtd = 1.0/(1.0/Rm+1.0/Rf);
+//	  if(beta == 0)
+//	    cout << " Rtd=" << Rtd << " ";
+
 	  real_1d_array delayedMap[NTD];
 	  real_2d_array chain, dftmp;
 	  real_2d_array delayedDF[NTD];
@@ -247,10 +250,13 @@ void TDaction_grad(const real_1d_array &x, double &action, real_1d_array &grad, 
 	  dftmp.setlength(NX,NX);
 	  maptmp0.setlength(NX);
 	  maptmp1.setlength(NX);
+	  
+	  real_1d_array xcurrent;
+	  xcurrent.setlength(NX);
 
 	  for(i=0; i<NT-taus[NTD-1]; i++){
-	    real_1d_array xcurrent;
-	    slice(XX, 1, xcurrent);
+
+	    slice(XX, i, xcurrent);
 
 	    discF(xcurrent,maptmp0);
 	    discDF(xcurrent, chain);
