@@ -259,10 +259,10 @@ void TDaction_grad(const real_1d_array &x, double &action, real_1d_array &grad, 
 
 	      discF(maptmp0, maptmp1);
 
-	      //Want grad dA/dx(n) = (f^T(x)-y(n+T))*(DF(f^(T-1))*DF(F^(t-2))*...DF(x)
-	      discDF(maptmp1, dftmp);
-	      simple_mmult(dftmp,chain,chain);
-
+	      // Multiply next chain-ruled DF-matrix AFTER storing
+	      // it. For a given time delay, we want the DF evaluated
+	      // up to DF(f^tau-1(x)) Ex: for Tau = 1, only want
+	      // df(x)/dx, not df(f)/dx * df(x)/dx
 	      if(count >= NTD)
 		throw "COUNT too big, TAUS out of bounds";
 	      if(tau==taus[count]){
@@ -270,6 +270,11 @@ void TDaction_grad(const real_1d_array &x, double &action, real_1d_array &grad, 
 		delayedMap[count] = maptmp1;
 		count++;
 	      }
+
+
+	      //Want grad dA/dx(n) = (f^T(x)-y(n+T))*(DF(f^(T-1))*DF(F^(t-2))*...DF(x)
+	      discDF(maptmp1, dftmp);
+	      simple_mmult(dftmp,chain,chain);
 	      maptmp0 = maptmp1;
 
 	    } 
@@ -280,10 +285,21 @@ void TDaction_grad(const real_1d_array &x, double &action, real_1d_array &grad, 
 	      for(j=0; j<NMEA; j++){	      	      
 		int idx = measIdx[j];
 		// f^tau(x(n)) - y(n+tau) ; Measured indices only
+		if(count>=NTD)
+		  throw("ERROR! COUNT TOO big!");
+		if(idx>=NX)
+		  throw("ERROR! idx TOO big!");
+
 		double dyTD =  delayedMap[count][idx] - Ydata[i+taus[count]][idx];
 		action += Rtd*dyTD*dyTD;
 		//CHECK!
 		for(k=0; k<NX; k++){	   
+		  // grad_td[i][k] += 2*Rtd*dyTD*dfchain[idx][k]
+		  // grad[NX*i+k] = grad_td[i][k]
+
+
+
+
 		  grad[NX*i+k] += 2*Rtd*dyTD*dfchain[idx][k];
 		}
 	      }
@@ -343,13 +359,14 @@ int main(int argc, char **argv)
 	    if(initpaths.is_open()){
 	      for(i=0;i<NX*NT;i++) 
 		initpaths << X0[i] << " ";
-	      initpaths << endl;
+	      initpaths << endl;	      
 	    }
 	    else{
 	      printf("ERROR FILE WAS NOT OPENED");
 	    }
-	  }
+	  }	  
 	  initpaths.close();
+	  cout << "Last entry in initpaths.txt: " << X0[NT*NX-1];
 	}
 
 
@@ -379,6 +396,7 @@ int main(int argc, char **argv)
 		  if(loadpaths.is_open()){
 		    for(i=0;i<NX*NT;i++)
 		      loadpaths >> X0[i];			  
+		    cout << "Last entry loaded from initpaths.txt: " << X0[NT*NX-1];
 		  }
 		  else{
 		    printf("ERROR INIT PATHS NOT FOUND!");

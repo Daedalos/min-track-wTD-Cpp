@@ -4,9 +4,9 @@ import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
 
-ntd = 1
+ntd = 0
 D = 5
-M = 1
+M = 2
 PATH=50
 B=30
 minima = np.zeros((PATH*B,2))
