@@ -10,7 +10,7 @@
 #include <fstream>
 using namespace std;
 
-#define DT 0.025     // time step size
+#define DT 0.01     // time step size
 
 // These were previously defined in func.cpp. Moved here to keep
 // constant in one place --URI 
@@ -19,7 +19,7 @@ using namespace std;
 #include "func_noparam.cpp"  // func.cpp uses DT, so include after defining
 
 #define NT 200       // number of time steps
-#define NMEA 2       // number of measurements
+#define NMEA 1       // number of measurements
 #define NPATH 50    // number of paths
 
 #define NBETA 30     // maximal beta
@@ -29,14 +29,14 @@ const int BETASTART = 0; // possible ot start at Beta!=0 --URI
 real_2d_array Ydata;
 const bool generate_paths = false;
 
-const int NTD = 1;
-const int taus[NTD] = {4};
+const int NTD = 0;
+const int taus[NTD] = {};
 
 int measIdx[NMEA];
 
 void readdata(real_2d_array &data){
 	FILE *fp;
-	fp = fopen("./dataN_dt025_noP.txt","r");
+	fp = fopen("./dataN_dt01_noP.txt","r");
 	int i,j;
 	for(i=0;i<NT;i++)
 		for(j=0;j<NX;j++)
@@ -387,7 +387,7 @@ int main(int argc, char **argv)
 
 	for(ipath=0;ipath<NPATH;ipath++){
 	        
-		sprintf(filename,"path/D%d_M%d_PATH%d_Ntd%d.dat", NX,NMEA,ipath,NTD);
+	        sprintf(filename,"path/D%d_M%d_PATH%d_Ntd%d_dt%e.dat", NX,NMEA,ipath,NTD,DT);
 
 		//lastpath is the filename used to continue from a
 		//non-zero BETASTART. It must occur within ipath loop,

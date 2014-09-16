@@ -4,14 +4,16 @@ import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
 
-ntd = 1
+ntd = 2
 D = 5
 M = 1
 PATH=50
+dt=8
 B=30
 minima = np.zeros((PATH*B,2))
 bad =0
 for p in range(PATH):
+#    data = np.loadtxt('path/D%d_M%d_PATH%d_Ntd%d_dt%d.dat'%(D,M,p,ntd,dt))
     data = np.loadtxt('path/D%d_M%d_PATH%d_Ntd%d.dat'%(D,M,p,ntd))
     if data.size==0:
         print "EMPTRY!"
