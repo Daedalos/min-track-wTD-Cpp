@@ -18,9 +18,9 @@ using namespace std;
 #define ND 5         // dim of state variable
 #include "func_noparam.cpp"  // func.cpp uses DT, so include after defining
 
-#define NT 200       // number of time steps
+#define NT 300       // number of time steps
 #define NMEA 1       // number of measurements
-#define NPATH 50    // number of paths
+#define NPATH 100    // number of paths
 
 #define NBETA 30     // maximal beta
 const int BETASTART = 0; // possible ot start at Beta!=0 --URI
@@ -29,8 +29,8 @@ const int BETASTART = 0; // possible ot start at Beta!=0 --URI
 real_2d_array Ydata;
 const bool generate_paths = false;
 
-const int NTD = 0;
-const int taus[NTD] = {};
+const int NTD = 2;
+const int taus[NTD] = {4,8};
 
 int measIdx[NMEA];
 
