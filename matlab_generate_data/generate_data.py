@@ -14,16 +14,16 @@ dt = 0.01
 
 T_total = arange(0,100,dt)
 #data_initial = randn(5+1,1)
-data_initial = [0.80, 0.95, 0.71, 0.24, 0.63];
+data_initial = [0.80, 0.95, 0.71, 0.24, 0.63,-1, 2, 1, -2.2, 0.3];
 #data_initial[-1] = 8.17
 
 Y = odeint(lorenz96,data_initial,T_total)
-Y = Y[1000:2501,:]
+Y = Y[10000:25001,:]
 param = 8.17*ones(len(Y))
 Y = column_stack((Y,param))
 
-savetxt("data_dt01.txt",Y)
+savetxt("data_D{}_dt{}.txt".format(len(data_initial),dt),Y)
 noise = 0.5*random.standard_normal(Y.shape)
 Ynoise = Y + noise
-savetxt("dataN_dt01.txt",Ynoise)
+savetxt("dataN_D{}_dt{}.txt".format(len(data_initial),dt),Ynoise)
 

@@ -14,8 +14,8 @@ using namespace std;
 
 // These were previously defined in func.cpp. Moved here to keep
 // constant in one place --URI 
-#define NX 5   	     // dim of state variable + number of parameters 
-#define ND 5         // dim of state variable
+#define NX 10   	     // dim of state variable + number of parameters 
+#define ND 10         // dim of state variable
 #include "func_noparam.cpp"  // func.cpp uses DT, so include after defining
 
 #define NT 300       // number of time steps
@@ -27,10 +27,10 @@ const int BETASTART = 0; // possible ot start at Beta!=0 --URI
 //using namespace alglib;
 
 real_2d_array Ydata;
-const bool generate_paths = false;
+const bool generate_paths = true;
 
-const int NTD = 2;
-const int taus[NTD] = {4,8};
+const int NTD = 0;
+const int taus[NTD] = {};
 
 int measIdx[NMEA];
 
@@ -383,7 +383,7 @@ int main(int argc, char **argv)
 	//persist through each iteration.
 	ifstream loadpaths("initpaths.txt");
 
-
+	int nans = 0;
 
 	for(ipath=0;ipath<NPATH;ipath++){
 	        
@@ -445,10 +445,15 @@ int main(int argc, char **argv)
 			TDaction_grad(X0, act, grad_a, ptr);
 			//printf("run here\n");
 			fprintf(fp_output, "%d %d %e ", beta, int(rep.terminationtype), act);
-			printf("Min A0 = %e \n", act);
+			printf("Min A0 = %e \n", act);			
 			for(i=0;i<NX*NT;i++)
 				fprintf(fp_output,"%e ", X0[i]);
 			fprintf(fp_output,"\n");
+
+			// Sometimes TD returns NaN Action values... URI
+			if(isnan(act))
+			  nans += 1;
+			  break;
 		}
 		fclose(fp_output);
 		if(lastpath.is_open())
@@ -456,5 +461,6 @@ int main(int argc, char **argv)
 	}
 	if(loadpaths.is_open())
 	  loadpaths.close();
+	printf("Number of NaN Paths = %d", nans);
 	return 0;
 }
