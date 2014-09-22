@@ -14,8 +14,8 @@ using namespace std;
 
 // These were previously defined in func.cpp. Moved here to keep
 // constant in one place --URI 
-#define NX 10   	     // dim of state variable + number of parameters 
-#define ND 10         // dim of state variable
+#define NX 5   	     // dim of state variable + number of parameters 
+#define ND 5         // dim of state variable
 #include "func_noparam.cpp"  // func.cpp uses DT, so include after defining
 
 #define NT 300       // number of time steps
@@ -27,16 +27,16 @@ const int BETASTART = 0; // possible ot start at Beta!=0 --URI
 //using namespace alglib;
 
 real_2d_array Ydata;
-const bool generate_paths = true;
+const bool generate_paths = false;
 
-const int NTD = 0;
-const int taus[NTD] = {};
+const int NTD = 1;
+const int taus[NTD] = {10};
 
 int measIdx[NMEA];
 
 void readdata(real_2d_array &data){
 	FILE *fp;
-	fp = fopen("./dataN_dt01_noP.txt","r");
+	fp = fopen("./data_D5_noP.txt","r");
 	int i,j;
 	for(i=0;i<NT;i++)
 		for(j=0;j<NX;j++)
@@ -451,9 +451,10 @@ int main(int argc, char **argv)
 			fprintf(fp_output,"\n");
 
 			// Sometimes TD returns NaN Action values... URI
-			if(isnan(act))
+			if(isnan(act)){			     
 			  nans += 1;
 			  break;
+			}
 		}
 		fclose(fp_output);
 		if(lastpath.is_open())
