@@ -43,7 +43,7 @@ void readdata(real_2d_array &data){
 			fscanf(fp,"%lf", &data[i][j]);
 }
 
-
+// slices i^th row of matrix, into output
 void slice(real_2d_array &matrix, int i, real_1d_array &output){
 	int j;
 	int c = matrix.cols();
@@ -320,7 +320,7 @@ void TDaction_grad(const real_1d_array &x, double &action, real_1d_array &grad, 
 
 int main(int argc, char **argv)
 {
-
+  printf("HELLO!");
        // Set measured indices --URI
        for(int i=0; i<NMEA; i++)
 	 measIdx[i] = 2*i;

@@ -5,7 +5,7 @@ import matplotlib
 import matplotlib.pyplot as plt
 
 ntd = 0
-D = 5
+D = 10
 M = 1
 PATH=100
 dt=0.01
