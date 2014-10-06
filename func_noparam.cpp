@@ -2,10 +2,6 @@
 // discF, discDF
 // Also moved DX DF out of this part of code
 
-using namespace alglib;
-
-void func_origin(real_1d_array &x, real_1d_array &func);
-void func_DF(real_1d_array &x, real_2d_array &Jac);
 
 void func_origin(real_1d_array &x, real_1d_array &func){
 	//lorenz96
@@ -40,6 +36,16 @@ void func_DF(real_1d_array &x, real_2d_array &Jac){
 // produces the vector-func map f(x) for given state vector (x)
 // Currently uses RK2
 // x should be state vector plus at one time point, f is output vector. same length DX
+
+int delta(int i, int j){
+  if(i==j){
+    return 1;
+  }
+  else{
+    return 0;
+  }
+}
+
 void discF(real_1d_array x, real_1d_array &f){
   real_1d_array k1, k2, xtmp;
   k1.setlength(NX);
@@ -61,15 +67,6 @@ void discF(real_1d_array x, real_1d_array &f){
   
 }
 
-int delta(int i, int j){
-  if(i==j){
-    return 1;
-  }
-  else{
-    return 0;
-  }
-}
-
 void discDF(real_1d_array x, real_2d_array &Jac){
 
   int i, j, k;
@@ -89,10 +86,15 @@ void discDF(real_1d_array x, real_2d_array &Jac){
     xmid[k] = x[k] + 0.5*DT*F[k];	
   }
   func_DF(xmid,JacMid);
+
+  real_2d_array JacProd;
+  JacProd.setlength(NX,NX);
+
+  simple_mmult(Jac0,JacMid,JacProd);
           
   for(i=0; i<NX; i++){
     for(j=0; j<NX; j++){
-      Jac[i][j] = delta(i,j) + DT*JacMid[i][j]*( delta(i,j) + 0.5*DT*Jac0[i][j]);
+      Jac[i][j] = delta(i,j) + DT*JacMid[i][j] + 0.5*DT*DT*JacProd[i][j];
     }
   }
 

@@ -9,6 +9,8 @@
 #include <string>
 #include <fstream>
 using namespace std;
+using namespace alglib;
+
 
 #define DT 0.01     // time step size
 
@@ -16,9 +18,8 @@ using namespace std;
 // constant in one place --URI 
 #define NX 5   	     // dim of state variable + number of parameters 
 #define ND 5         // dim of state variable
-#include "func_noparam.cpp"  // func.cpp uses DT, so include after defining
 
-#define NT 300       // number of time steps
+#define NT 100       // number of time steps
 #define NMEA 1       // number of measurements
 #define NPATH 100    // number of paths
 
@@ -30,9 +31,12 @@ real_2d_array Ydata;
 const bool generate_paths = false;
 
 const int NTD = 1;
-const int taus[NTD] = {10};
+const int taus[NTD] = {1};
 
 int measIdx[NMEA];
+
+void simple_mmult(real_2d_array &A, real_2d_array &B, real_2d_array &C);
+#include "func_noparam.cpp"  // func.cpp uses DT, so include after defining#include "func_noparam.h"  // func.cpp uses DT, so include after defining
 
 void readdata(real_2d_array &data){
 	FILE *fp;
@@ -62,9 +66,11 @@ void insert(real_2d_array &matrix, int i, real_1d_array &output){
 
 // wrapper for alglib::rmatrixgemm function to matrix multiply
 // eliminate extra arguments
+
 void simple_mmult(real_2d_array &A, real_2d_array &B, real_2d_array &C){
   rmatrixgemm(NX,NX,NX,1, A,0,0,0, B,0,0,0, 0, C,0,0);
 }
+
 
 void action_grad(const real_1d_array &x, double &action, real_1d_array &grad, void *ptr) {
 	real_2d_array XX, grad_m, test;
