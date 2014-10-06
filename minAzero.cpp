@@ -18,7 +18,7 @@ using namespace std;
 #define ND 5         // dim of state variable
 #include "func_noparam.cpp"  // func.cpp uses DT, so include after defining
 
-#define NT 300       // number of time steps
+#define NT 100       // number of time steps
 #define NMEA 1       // number of measurements
 #define NPATH 100    // number of paths
 
@@ -320,7 +320,7 @@ void TDaction_grad(const real_1d_array &x, double &action, real_1d_array &grad, 
 
 int main(int argc, char **argv)
 {
-
+  printf("hello!");
        // Set measured indices --URI
        for(int i=0; i<NMEA; i++)
 	 measIdx[i] = 2*i;

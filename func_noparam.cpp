@@ -70,6 +70,10 @@ int delta(int i, int j){
   }
 }
 
+void simple_mmult(real_2d_array &A, real_2d_array &B, real_2d_array &C){
+  rmatrixgemm(NX,NX,NX,1, A,0,0,0, B,0,0,0, 0, C,0,0);
+}
+
 void discDF(real_1d_array x, real_2d_array &Jac){
 
   int i, j, k;
@@ -89,10 +93,13 @@ void discDF(real_1d_array x, real_2d_array &Jac){
     xmid[k] = x[k] + 0.5*DT*F[k];	
   }
   func_DF(xmid,JacMid);
+
+  real_2d_array JacProd;
+  simple_mmult(Jac0,JacMid,JacProd);
           
   for(i=0; i<NX; i++){
     for(j=0; j<NX; j++){
-      Jac[i][j] = delta(i,j) + DT*JacMid[i][j]*( delta(i,j) + 0.5*DT*Jac0[i][j]);
+      Jac[i][j] = delta(i,j) + DT*JacMid[i][j] + 0.5*DT*DT*JacProd[i][j];
     }
   }
 
