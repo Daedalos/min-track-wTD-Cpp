@@ -4,10 +4,10 @@ import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
 
-ntd = 0
-D = 10
+ntd = 2
+D = 5
 M = 1
-PATH=100
+PATH=17
 dt=0.01
 B=30
 minima = np.zeros((PATH*B,2))
@@ -19,6 +19,7 @@ for p in range(PATH):
         print "EMPTRY!"
         bad += 1
     else:
+        if np.isnan(data[-1,0]): continue
         minima[B*p:B*(p+1),:] = data[:,[0,2]]
         print "Failed Paths = ", sum(data[:,1]!=1)
 

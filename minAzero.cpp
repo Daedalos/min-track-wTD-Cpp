@@ -19,19 +19,18 @@ using namespace alglib;
 #define NX 5   	     // dim of state variable + number of parameters 
 #define ND 5         // dim of state variable
 
-#define NT 100       // number of time steps
+#define NT 300       // number of time steps
 #define NMEA 1       // number of measurements
-#define NPATH 100    // number of paths
 
+#define NPATH 100    // number of paths
 #define NBETA 30     // maximal beta
 const int BETASTART = 0; // possible ot start at Beta!=0 --URI
-//using namespace alglib;
 
 real_2d_array Ydata;
 const bool generate_paths = false;
 
-const int NTD = 1;
-const int taus[NTD] = {1};
+const int NTD = 3;
+const int taus[NTD] = {10,20,30};
 
 int measIdx[NMEA];
 
@@ -304,6 +303,8 @@ void TDaction_grad(const real_1d_array &x, double &action, real_1d_array &grad, 
 		if(idx>=NX)
 		  throw("ERROR! idx TOO big!");
 
+		if(i+taus[count]>=NT)
+		     throw("AHHHHHH");
 		double dyTD =  delayedMap[count][idx] - Ydata[i+taus[count]][idx];
 		action += Rtd*dyTD*dyTD;
 		//CHECK!
@@ -389,11 +390,16 @@ int main(int argc, char **argv)
 	//persist through each iteration.
 	ifstream loadpaths("initpaths.txt");
 
-	int nans = 0;
+	int nans = 0;       
 
 	for(ipath=0;ipath<NPATH;ipath++){
-	        
-	        sprintf(filename,"path/D%d_M%d_PATH%d_Ntd%d_dt%e.dat", NX,NMEA,ipath,NTD,DT);
+	     string taustr("Ntd%d_");
+
+	     for(i=0; i<NTD;i++)
+		  taustr = taustr + std::to_string(taus[i]) + "-";
+
+	     string temp("path/D%d_M%d_PATH%d_"+taustr+"dt%e.dat");
+	     sprintf(filename, temp.c_str(), NX,NMEA,ipath,NTD,DT);
 
 		//lastpath is the filename used to continue from a
 		//non-zero BETASTART. It must occur within ipath loop,

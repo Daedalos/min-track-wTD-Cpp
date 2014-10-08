@@ -12,14 +12,14 @@ def lorenz96(x, t):
 
 dt = 0.01
 
-T_total = arange(0,10,dt)
+T_total = arange(0,100,dt)
 #data_initial = randn(5+1,1)
 #data_initial = [0.80, 0.95, 0.71, 0.24, 0.63,-1, 2, 1, -2.2, 0.3];
 #data_initial[-1] = 8.17
 data_initial = [0.80, 0.95, 0.71, 0.24, 0.63];
 
 Y = odeint(lorenz96,data_initial,T_total)
-#Y = Y[1000:2501,:]
+Y = Y[1000:2501,:]
 param = 8.17*ones(len(Y))
 Y = column_stack((Y,param))
 

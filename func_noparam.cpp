@@ -90,7 +90,7 @@ void discDF(real_1d_array x, real_2d_array &Jac){
   real_2d_array JacProd;
   JacProd.setlength(NX,NX);
 
-  simple_mmult(Jac0,JacMid,JacProd);
+  simple_mmult(JacMid,Jac0,JacProd);
           
   for(i=0; i<NX; i++){
     for(j=0; j<NX; j++){
