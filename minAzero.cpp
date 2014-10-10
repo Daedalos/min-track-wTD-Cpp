@@ -268,7 +268,9 @@ void TDaction_grad(const real_1d_array &x, double &action, real_1d_array &grad, 
 
 	    int count = 0;
 	    int tau;
-	    for(tau=1; tau<taus[NTD-1]; tau++){
+
+	    // CHECK THIS FOR BUG!!!!
+	    for(tau=1; tau<=taus[NTD-1]; tau++){
 
 	      discF(maptmp0, maptmp1);
 
@@ -280,13 +282,13 @@ void TDaction_grad(const real_1d_array &x, double &action, real_1d_array &grad, 
 		throw "COUNT too big, TAUS out of bounds";
 	      if(tau==taus[count]){
 		delayedDF[count] = chain;
-		delayedMap[count] = maptmp1;
+		delayedMap[count] = maptmp0;
 		count++;
 	      }
 
 
 	      //Want grad dA/dx(n) = (f^T(x)-y(n+T))*(DF(f^(T-1))*DF(F^(t-2))*...DF(x)
-	      discDF(maptmp1, dftmp);
+	      discDF(maptmp0, dftmp);
 	      simple_mmult(dftmp,chain,chain);
 	      maptmp0 = maptmp1;
 
