@@ -19,18 +19,18 @@ using namespace alglib;
 #define NX 5   	     // dim of state variable + number of parameters 
 #define ND 5         // dim of state variable
 
-#define NT 300       // number of time steps
+#define NT 150       // number of time steps
 #define NMEA 1       // number of measurements
 
-#define NPATH 100    // number of paths
+#define NPATH 10    // number of paths
 #define NBETA 30     // maximal beta
 const int BETASTART = 0; // possible ot start at Beta!=0 --URI
 
 real_2d_array Ydata;
 const bool generate_paths = false;
 
-const int NTD = 3;
-const int taus[NTD] = {10,20,30};
+const int NTD = 1;
+const int taus[NTD] = {10};
 
 int measIdx[NMEA];
 

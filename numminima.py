@@ -4,16 +4,16 @@ import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
 
-ntd = 0
-taus = []
+ntd = 3
+taus = [10,20,30]
 D = 5
 M = 1
 PATH=100
 dt=0.01
 Bstart = 20
 B=30
-thesh = 0.1
-action = np.zeros((B-Bstart,PATH))
+thesh = 1
+action = np.zeros((B-Bstart,PATH))*np.nan
 bad =0
 
 filetemp = 'path/D%d_M%d_PATH%d_Ntd%d_'
@@ -35,6 +35,7 @@ for p in range(PATH):
         action[:,p] = data[:,2]
         print "Incomplete Paths = ", sum(data[:,1]!=1)
 
+
 numbelow = np.sum(action<thesh,1)
-plt.plot(range(B-Bstart), numbelow)
+plt.plot(range(Bstart,B), numbelow)
 plt.show()
