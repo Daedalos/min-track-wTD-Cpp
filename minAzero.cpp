@@ -29,8 +29,8 @@ const int BETASTART = 0; // possible ot start at Beta!=0 --URI
 real_2d_array Ydata;
 const bool generate_paths = false;
 
-const int NTD = 3;
-const int taus[NTD] = {10,20,30};
+const int NTD = 1;
+const int taus[NTD] = {3};
 
 int measIdx[NMEA];
 
@@ -39,7 +39,7 @@ void simple_mmult(real_2d_array &A, real_2d_array &B, real_2d_array &C);
 
 void readdata(real_2d_array &data){
 	FILE *fp;
-	fp = fopen("./data_D5_noP.txt","r");
+	fp = fopen("./dataN_dt01_noP.txt","r");
 	int i,j;
 	for(i=0;i<NT;i++)
 		for(j=0;j<NX;j++)
@@ -400,7 +400,7 @@ int main(int argc, char **argv)
 	     for(i=0; i<NTD;i++)
 		  taustr = taustr + std::to_string(taus[i]) + "-";
 
-	     string temp("path/D%d_M%d_PATH%d_"+taustr+"dt%e.dat");
+	     string temp("pathNoise/D%d_M%d_PATH%d_"+taustr+"dt%e.dat");
 	     sprintf(filename, temp.c_str(), NX,NMEA,ipath,NTD,DT);
 
 		//lastpath is the filename used to continue from a
