@@ -3,23 +3,24 @@ import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
 
-ntd = 1
-taus = [10]
+ntd = 0
+taus = []
 D = 5
 M = 1
 PATH=100
 dt= 0.01
-thresh = 10
+thresh = 1000
 lowerbnd = 0
 B=29
 N = 300
-state =1
+state =0
 
 
 bad = 0
-Ydata = np.loadtxt('data_D5_noP.txt')
+Ydata = np.loadtxt('dataN_dt01_noP.txt')
+#Ydata = np.loadtxt('data_D5_noP.txt')
 
-filetemp = 'path/D%d_M%d_PATH%d_Ntd%d_'
+filetemp = 'pathNoise/D%d_M%d_PATH%d_Ntd%d_'
 for i in range(len(taus)):
     filetemp += '%d-' % taus[i]
 filetemp += 'dt%e.dat'

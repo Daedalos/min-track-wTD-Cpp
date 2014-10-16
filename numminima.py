@@ -12,7 +12,8 @@ PATH=100
 dt=0.01
 Bstart = 20
 B=30
-thesh = 1
+thresh = 1
+lowbnd = 0
 action = np.zeros((B-Bstart,PATH))*np.nan
 bad =0
 
@@ -36,6 +37,10 @@ for p in range(PATH):
         print "Incomplete Paths = ", sum(data[:,1]!=1)
 
 
-numbelow = np.sum(action<thesh,1)
+action[np.isnan(action)] = -1
+
+between = np.logical_and(action<thresh, action>lowbnd)
+
+numbelow = np.sum( between ,1)
 plt.plot(range(Bstart,B), numbelow)
 plt.show()
