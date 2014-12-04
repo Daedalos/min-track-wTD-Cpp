@@ -4,26 +4,38 @@ import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
 
-ntd = 3
-taus = [10,20,30]
-D = 5
+taus = []
+ntd = len(taus)
+D = 10
 M = 1
 PATH=100
 dt=0.01
 B=30
 minima = np.zeros((PATH*B,2))
 bad =0
-filetemp = 'path/D%d_M%d_PATH%d_Ntd%d_'
+
+filetemp = 'pbD{0}'
 for i in range(len(taus)):
-    filetemp += '%d-' % taus[i]
-filetemp += 'dt%e.dat'
+    filetemp += '-{}'.format(taus[i])
+if ntd ==0:
+    filetemp += '-0'
+
+filetemp += '/path/D{0}_M{1}_PATH{2}_Ntd{3}_dt{4:e}.dat'
+
+#filetemp = 'path/D%d_M%d_PATH%d_Ntd%d_'
+#for i in range(len(taus)):
+#    filetemp += '%d-' % taus[i]
+#filetemp += 'dt%e.dat'
+
 print filetemp
 points = 0
+
 for p in range(PATH):
-#    data = np.loadtxt('path/D%d_M%d_PATH%d_Ntd%d_dt%d.dat'%(D,M,p,ntd,dt))
+    #    data = np.loadtxt('path/D%d_M%d_PATH%d_Ntd%d_dt%d.dat'%(D,M,p,ntd,dt)) 
     try:
-        
-        data = np.loadtxt(filetemp%(D,M,p,ntd,dt))
+        filename = filetemp.format(D,M,p,ntd,dt)
+        data = np.loadtxt(filename)
+        #data = np.loadtxt(filetemp%(D,M,p,ntd,dt))
     except: 
       
         continue
@@ -36,6 +48,7 @@ for p in range(PATH):
         points +=1
         minima[B*p:B*(p+1),:] = data[:,[0,2]]
         print "Failed Paths = ", sum(data[:,1]!=1)
+
 
 print 'points plotted = ', points
 np.savetxt('beta_minima.dat', minima, fmt='%e')
